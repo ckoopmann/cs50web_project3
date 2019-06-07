@@ -1,6 +1,6 @@
 // Set starting value of name to 0
 if (!localStorage.getItem('name'))
-    localStorage.setItem('name', '');
+    localStorage.setItem('name', prompt("Enter your Name","dickhead"));
 
 // Load current value of  name
 document.addEventListener('DOMContentLoaded', () => {

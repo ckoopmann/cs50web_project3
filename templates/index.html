@@ -1,31 +1,10 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <script>
-
-            // Set starting value of name to 0
-            if (!localStorage.getItem('name'))
-                localStorage.setItem('name', '');
-
-            // Load current value of  name
-            document.addEventListener('DOMContentLoaded', () => {
-                document.querySelector('#heading').innerHTML = localStorage.getItem('name');
-
-                document.querySelector('#form').onsubmit = function() {
-                    const name = document.querySelector('#name').value;
-                    localStorage.setItem('name', name);
-                    document.querySelector('#heading').innerHTML = name;
-                };
-            });
-
-        </script>
-        <title>My Website</title>
+       <script src="{{ url_for('static', filename='index.js') }}"></script>
+      <title>My Website</title>
     </head>
     <body>
       <h1 id = "heading"></h1>
-      <form id="form">
-        <input id="name" autocomplete="off" autofocus placeholder="Name" type="text">
-        <input type="submit">
-      </form>
     </body>
 </html>
