@@ -1,8 +1,7 @@
-
+  alert('Hi')
   if (!localStorage.getItem('name')){
     localStorage.setItem('name', prompt("Enter your Name","dickhead"));
-  }
-  else {
+  } else {
     alert('Your Username is: ' + localStorage.getItem('name'))
   }
 
