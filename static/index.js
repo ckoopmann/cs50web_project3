@@ -5,9 +5,11 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!localStorage.getItem('name')){
     const name = prompt("Enter your Name","dickhead");
     localStorage.setItem('name', name);
+    console.log(name);
   } else {
     const name = localStorage.getItem('name');
     alert('Your Username is: ' + name);
+    console.log(name);
   }
 
   document.querySelector('#heading').innerHTML = name;
