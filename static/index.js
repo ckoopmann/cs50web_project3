@@ -1,14 +1,15 @@
-  alert('Hi')
-  if (!localStorage.getItem('name')){
-    localStorage.setItem('name', prompt("Enter your Name","dickhead"));
-  } else {
-    alert('Your Username is: ' + localStorage.getItem('name'))
-  }
 
 // Load current value of  name
 document.addEventListener('DOMContentLoaded', () => {
 
-  const name = localStorage.getItem('name');
+  if (!localStorage.getItem('name')){
+    const name = prompt("Enter your Name","dickhead")
+    localStorage.setItem('name', name);
+  } else {
+    const name = localStorage.getItem('name')
+    alert('Your Username is: ' + name)
+  }
+  
   document.querySelector('#heading').innerHTML = name;
 
 
