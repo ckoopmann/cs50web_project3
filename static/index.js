@@ -2,7 +2,7 @@
 // Load current value of  name
 document.addEventListener('DOMContentLoaded', () => {
 
-  alert('Hi')
+  alert('Hi');
 
   if (!localStorage.getItem('name')){
     const name = prompt("Enter your Name","dickhead");
@@ -14,8 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log(name);
   }
 
-  alert(name)
-  
+  alert(name);
+
+  print(name);
   document.querySelector('#heading').innerHTML = name;
 
 
