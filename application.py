@@ -17,6 +17,8 @@ def index():
 @socketio.on("create channel")
 def channel(data):
     new_channel = data["channelname"]
+    if new_channel in channel_list:
+        return
     channel_list.append(new_channel)
     print("New Channel: " + new_channel, file=sys.stdout)
     emit('announce channel', {"channelname":  new_channel}, broadcast=True)
