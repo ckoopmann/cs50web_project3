@@ -7,13 +7,11 @@
  }
 
 document.addEventListener('DOMContentLoaded', function() {
-    document.querySelector('#heading').innerHTML = name;
+    document.querySelector('#username').innerHTML = name;
 
     // Connect to websocket
     var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
-
-    socket.emit('my event', {data: 'I\'m connected!'});
 
     // When connected, configure channel creation
     socket.on('connect', () => {
