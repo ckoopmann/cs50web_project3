@@ -1,36 +1,42 @@
-
 // Load current value of  name
-document.addEventListener('DOMContentLoaded', () => {
+ if (!localStorage.getItem('name')){
+   var name = prompt("Enter your Name","dickhead");
+   localStorage.setItem('name', name);
+ } else {
+   var name = localStorage.getItem('name');
+ }
 
-  alert('Hi');
-
-  if (!localStorage.getItem('name')){
-    const name = prompt("Enter your Name","dickhead");
-    localStorage.setItem('name', name);
-    console.log(name);
-  } else {
-    const name = localStorage.getItem('name');
-    alert('Your Username is: ' + name);
-    console.log(name);
-  }
-
-  alert(name);
-
-  print(name);
-  document.querySelector('#heading').innerHTML = name;
-
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelector('#heading').innerHTML = name;
 
     // Connect to websocket
-  var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
-  // When connected, configure buttons
-  socket.on('connect', () => {
 
-    // Each button should emit a "submit vote" event
-    document.querySelector('#channel').onsubmit = () => {
-        var channelname = document.querySelector('#channelname').value;
-        socket.emit('create channel', {'chanelname': channelname});
-      };
+    socket.emit('my event', {data: 'I\'m connected!'});
+
+    // When connected, configure channel creation
+    socket.on('connect', () => {
+        // Each button should emit a "submit channel" event
+        document.querySelector('#channel').onsubmit = () => {
+            var channelname = document.querySelector('#channelname').value;
+            socket.emit('create channel', {'channelname': channelname});
+            return false;
+        };
     });
-  });
+
+    // When a new channel is announced, add to the unordered list
+    socket.on('announce channel', data => {
+        const li = document.createElement('li');
+        li.innerHTML = data.channelname;
+        document.querySelector('#channels').append(li);
+    });
+
+
+    // When a new vote is announced, add to the unordered list
+    socket.on('announce vote', data => {
+        const li = document.createElement('li');
+        li.innerHTML = `Vote recorded: ${data.selection}`;
+        document.querySelector('#votes').append(li);
+    });
 });
