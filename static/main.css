@@ -66,6 +66,10 @@ a, a:hover, a:focus {
     background: #5f788a;
 }
 
+#sidebar select {
+    padding-left: 30px !important;
+}
+
 #sidebar ul.components {
     padding: 20px 0;
     border-bottom: 1px solid #47748b;

@@ -29,17 +29,25 @@ document.addEventListener('DOMContentLoaded', function() {
     // When the initial channels are announced add all of them
     socket.on('all channels', data => {
         data.channels.forEach(channel => {
-            const li = document.createElement('li');
-            li.innerHTML = channel;
-            document.querySelector('#channels').append(li);
+            const opt = document.createElement('option');
+            // create text node to add to option element (opt)
+            opt.appendChild( document.createTextNode(channel) );
+
+            // set value property of opt
+            opt.value = channel;
+            document.querySelector('#channels').appendChild(opt);
         })
     });
 
     // When a new channel is announced, add to the unordered list
     socket.on('announce channel', data => {
-        const li = document.createElement('li');
-        li.innerHTML = data.channelname;
-        document.querySelector('#channels').append(li);
+        const opt = document.createElement('option');
+        const channel = data.channelname
+        // create text node to add to option element (opt)
+        opt.appendChild( document.createTextNode(channel) );
+        // set value property of opt
+        opt.value = channel;
+        document.querySelector('#channels').appendChild(opt);
     });
 
 });
