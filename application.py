@@ -17,9 +17,3 @@ def channel(data):
     new_channel = data["channelname"]
     print("New Channel: " + new_channel, file=sys.stdout)
     emit('announce channel', {"channelname":  new_channel}, broadcast=True)
-
-
-@socketio.on("submit vote")
-def vote(data):
-    selection = data["selection"]
-    emit("announce vote", {"selection": selection}, broadcast=True)
