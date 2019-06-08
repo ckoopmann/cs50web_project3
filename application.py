@@ -8,6 +8,8 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
+channel_list = []
+
 @app.route("/")
 def index():
     return render_template('index.html')
@@ -15,5 +17,11 @@ def index():
 @socketio.on("create channel")
 def channel(data):
     new_channel = data["channelname"]
+    channel_list.append(new_channel)
     print("New Channel: " + new_channel, file=sys.stdout)
     emit('announce channel', {"channelname":  new_channel}, broadcast=True)
+
+
+@socketio.on("connected")
+def channels():
+    emit('all channels', {"channels":  channel_list})

@@ -17,12 +17,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // When connected, configure channel creation
     socket.on('connect', () => {
+        // Emit connected message to request initial channel list
+        socket.emit('connected');
+
         // Each button should emit a "submit channel" event
         document.querySelector('#channel').onsubmit = () => {
             var channelname = document.querySelector('#channelname').value;
             socket.emit('create channel', {'channelname': channelname});
             return false;
         };
+    });
+
+    // When the initial channels are announced add all of them
+    socket.on('all channels', data => {
+        data.channels.forEach(channel => {
+            const li = document.createElement('li');
+            li.innerHTML = channel;
+            document.querySelector('#channels').append(li);
+        })
     });
 
     // When a new channel is announced, add to the unordered list
