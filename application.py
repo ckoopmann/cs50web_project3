@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_socketio import SocketIO, emit
 import sys
 
@@ -9,6 +9,8 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
 channel_list = []
+channel_sessions = {}
+channel_messages = {}
 
 @app.route("/")
 def index():
@@ -20,10 +22,24 @@ def channel(data):
     if new_channel in channel_list:
         return
     channel_list.append(new_channel)
-    print("New Channel: " + new_channel, file=sys.stdout)
+    channel_sessions[new_channel] = []
+    channel_messages[new_channel] = []
+    print("New Channel: " + new_channel)
     emit('announce channel', {"channelname":  new_channel}, broadcast=True)
 
 
 @socketio.on("connected")
 def channels():
     emit('all channels', {"channels":  channel_list})
+
+@socketio.on("change channel")
+def change(data):
+    new_channel = data["channelname"]
+
+    for key, value in channel_sessions.items():
+            if(request.sid in value):
+                value.remove(request.sid)
+            if(key == new_channel):
+                value.append(request.sid)
+                print("Channel Changed: " + new_channel)
+    print(channel_sessions)
