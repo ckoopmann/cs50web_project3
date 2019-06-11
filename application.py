@@ -27,6 +27,24 @@ def channel(data):
     print("New Channel: " + new_channel)
     emit('announce channel', {"channelname":  new_channel}, broadcast=True)
 
+@socketio.on("send message")
+def channel(data):
+    text = data["text"]
+    username = data["username"]
+    print(username + ": " + text)
+
+    #Find the channel that this user is in:
+    for key, value in channel_sessions.items():
+            if(request.sid in value):
+                channel_name = key
+                sessions = value
+
+    if not channel:
+        return
+
+
+    emit('announce message', {"text":  text, "username": username}, broadcast=True)
+
 
 @socketio.on("connected")
 def channels():
