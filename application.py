@@ -5,6 +5,7 @@ from flask_socketio import SocketIO, emit, join_room, leave_room
 import sys
 import time
 
+max_messages = 10
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
@@ -40,6 +41,10 @@ def channel(data):
     room = user_rooms[request.sid]
     timestamp = time.strftime("%d/%m/%Y %H:%M:%S")
     channel_messages[room].append((username, text, timestamp))
+
+    if len(channel_messages[room]) > max_messages:
+        channel_messages[room].pop(0)
+
     emit('announce message', {"text":  text, "username": username, "timestamp": timestamp}, room = room)
 
 

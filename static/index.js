@@ -21,6 +21,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Each button should emit a "submit channel" event
     document.querySelector('#channel').onsubmit = () => {
         var channelname = document.querySelector('#channelname').value;
+        if(channelname === ""){
+            return false
+        }
         socket.emit('create channel', {'channelname': channelname});
         return false;
     };
