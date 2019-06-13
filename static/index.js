@@ -67,6 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
     socket.on('announce message', data => {
         const text = document.createTextNode(data.text)
         const username = document.createTextNode(data.username)
+        const timestamp = document.createTextNode(data.timestamp)
         const chat = document.querySelector('.chat');
 
         // Create Listitem
@@ -79,12 +80,16 @@ document.addEventListener('DOMContentLoaded', function() {
         const header = document.createElement('div')
         header.className = "header";
         const strong = document.createElement('strong')
+        const small = document.createElement('small')
+        small.className = "pull-right text-muted"
         // Ceate Text Paragraph
         const p = document.createElement('p')
         // Glue it all together
         p.appendChild(text)
         strong.appendChild(username)
+        small.appendChild(timestamp)
         header.appendChild(strong)
+        header.appendChild(small)
         message.appendChild(header)
         message.appendChild(p)
         li.appendChild(message)

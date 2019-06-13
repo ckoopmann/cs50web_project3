@@ -3,6 +3,8 @@ import os
 from flask import Flask, render_template, request
 from flask_socketio import SocketIO, emit, join_room, leave_room
 import sys
+import time
+
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
@@ -36,7 +38,9 @@ def channel(data):
         return
 
     room = user_rooms[request.sid]
-    emit('announce message', {"text":  text, "username": username}, room = room)
+    timestamp = time.strftime("%d/%m/%Y %H:%M:%S")
+    channel_messages[room].append((username, text, timestamp))
+    emit('announce message', {"text":  text, "username": username, "timestamp": timestamp}, room = room)
 
 
 @socketio.on("connected")
@@ -54,5 +58,9 @@ def change(data):
 
     user_rooms[request.sid] = new_channel
     join_room(new_channel)
+
+    for username, text, timestamp in channel_messages[new_channel]:
+        emit('announce message', {"text":  text, "username": username, "timestamp": timestamp})
+
     print("Channel Changed: " + new_channel)
     print(user_rooms)
