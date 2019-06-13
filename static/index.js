@@ -93,6 +93,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.querySelector('#channels').onchange = function(){
         alert(this.value + "has been selected");
+
+        var myNode =  document.querySelector('.chat');
+        while (myNode.firstChild) {
+            myNode.removeChild(myNode.firstChild);
+        }
         socket.emit('change channel',  {'channelname': this.value})
     }
 
