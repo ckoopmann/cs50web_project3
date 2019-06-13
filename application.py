@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask, render_template, request
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, join_room, leave_room
 import sys
 
 app = Flask(__name__)
@@ -9,7 +9,7 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
 channel_list = []
-channel_sessions = {}
+user_rooms = {}
 channel_messages = {}
 
 @app.route("/")
@@ -22,7 +22,6 @@ def channel(data):
     if new_channel in channel_list:
         return
     channel_list.append(new_channel)
-    channel_sessions[new_channel] = []
     channel_messages[new_channel] = []
     print("New Channel: " + new_channel)
     emit('announce channel', {"channelname":  new_channel}, broadcast=True)
@@ -33,17 +32,11 @@ def channel(data):
     username = data["username"]
     print(username + ": " + text)
 
-    #Find the channel that this user is in:
-    for key, value in channel_sessions.items():
-            if(request.sid in value):
-                channel_name = key
-                sessions = value
-
-    if not channel:
+    if(request.sid not in user_rooms):
         return
 
-
-    emit('announce message', {"text":  text, "username": username}, broadcast=True)
+    room = user_rooms[request.sid]
+    emit('announce message', {"text":  text, "username": username}, room = room)
 
 
 @socketio.on("connected")
@@ -52,12 +45,14 @@ def channels():
 
 @socketio.on("change channel")
 def change(data):
+
     new_channel = data["channelname"]
 
-    for key, value in channel_sessions.items():
-            if(request.sid in value):
-                value.remove(request.sid)
-            if(key == new_channel):
-                value.append(request.sid)
-                print("Channel Changed: " + new_channel)
-    print(channel_sessions)
+    if(request.sid in user_rooms):
+        old_channel = user_rooms[request.sid]
+        leave_room(old_channel)
+
+    user_rooms[request.sid] = new_channel
+    join_room(new_channel)
+    print("Channel Changed: " + new_channel)
+    print(user_rooms)
