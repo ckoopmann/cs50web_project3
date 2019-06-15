@@ -34,7 +34,11 @@ document.addEventListener('DOMContentLoaded', function() {
         socket.emit('send message', {'text': text, 'username':name});
         return false;
     };
+
+
     });
+
+
 
     // When the initial channels are announced add all of them
     socket.on('all channels', data => {
@@ -113,5 +117,32 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         socket.emit('change channel',  {'channelname': this.value})
     }
+
+    // Search Messages
+    document.querySelector('#search').onsubmit = () => {
+        var searchterm = document.querySelector('#searchterm').value;
+        var chat =  document.querySelector('.chat');
+        var message_nodes = chat.querySelectorAll('li');
+        console.log(message_nodes);
+        for(var node of message_nodes){
+            var text = node.getElementsByTagName('p')[0].innerHTML;
+            if(!text.includes(searchterm)){
+                chat.removeChild(node);
+            }
+        }
+        return false;
+    };
+
+    // Search Messages
+    document.querySelector('#reset').onclick = () => {
+        var channel = document.querySelector('#channels').value
+        var myNode =  document.querySelector('.chat');
+        while (myNode.firstChild) {
+            myNode.removeChild(myNode.firstChild);
+        }
+        socket.emit('change channel',  {'channelname': channel})
+        return false;
+    };
+
 
 });

@@ -54,6 +54,8 @@ def channels():
 
 @socketio.on("change channel")
 def change(data):
+    if(data["channelname"] == ""):
+        return
 
     new_channel = data["channelname"]
 
