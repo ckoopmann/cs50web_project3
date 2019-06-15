@@ -39,6 +39,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // When the initial channels are announced add all of them
     socket.on('all channels', data => {
         const sel = document.querySelector('#channels');
+        var channelname = localStorage.getItem('channel')
+
         data.channels.forEach(channel => {
             const opt = document.createElement('option');
             // create text node to add to option element (opt)
@@ -47,7 +49,11 @@ document.addEventListener('DOMContentLoaded', function() {
             // set value property of opt
             opt.value = channel;
             sel.appendChild(opt);
+            if(channelname && channelname === channel){
+                sel.value = channel;
+            }
         })
+
         socket.emit('change channel',  {'channelname': sel.value})
     });
 
@@ -100,8 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.querySelector('#channels').onchange = function(){
-        alert(this.value + "has been selected");
-
+        localStorage.setItem("channel", this.value)
         var myNode =  document.querySelector('.chat');
         while (myNode.firstChild) {
             myNode.removeChild(myNode.firstChild);
